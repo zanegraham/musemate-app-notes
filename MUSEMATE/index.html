@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MuseMate AI</title>
+</head>
+<body>
+  <h1>MuseMate AI</h1>
+
+  <!-- Idea input section -->
+  <textarea id="ideaBox" placeholder="Type your idea here..."></textarea>
+  <button onclick="saveIdea()">Save Idea</button>
+
+  <br><br>
+
+  <!-- Chat with AI section -->
+  <input id="questionBox" placeholder="Ask MuseMate AI for help...">
+  <button onclick="askAI()">Ask AI</button>
+  <p id="response"></p>
+
+  <script>
+    // Function to save the idea to Firestore
+    async function saveIdea() {
+      const idea = document.getElementById('ideaBox').value;
+      const response = await fetch('/save_idea', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({idea})
+      });
+
+      const result = await response.json();
+      alert(result.status); // Notify user of success
+    }
+
+    // Function to ask AI for help and get a response
+    async function askAI() {
+      const message = document.getElementById('questionBox').value;
+      const response = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message})
+      });
+
+      const data = await response.json();
+      document.getElementById('response').innerText = data.reply; // Show AI response
+    }
+  </script>
+</body>
+</html>
